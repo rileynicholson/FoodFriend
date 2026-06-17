@@ -10,7 +10,7 @@ import java.io.IOException;
 public class FoodFriend {
 	static ArrayList<String> foodItems = new ArrayList<>();
 	
-	public static void run() {
+	public void run() {
 		File saveFile = new File("SaveFile.txt");
 		
 		if (saveFile.exists()) {
@@ -85,11 +85,13 @@ public class FoodFriend {
 	}
 	
 	public static void generateRecipes() {
-		
+		// WIP
+		// Work In Progress
 	}
 	
 	public static void managePantry() {
-		
+		// WIP
+		// Work In Progress
 	}
 	
 	public static void newPage() {
