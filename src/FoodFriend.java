@@ -68,6 +68,9 @@ public class FoodFriend {
 					break;
 					
 				case 3: // Exit
+					System.out.println("Exiting the program, thank you for using!");
+					scanner.close();
+					System.exit(1);
 					break;
 					
 				default: // Error
@@ -95,7 +98,7 @@ public class FoodFriend {
 	}
 	
 	public static void newPage() {
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < 30; i++) {
 			System.out.println();
 		}
 	}
