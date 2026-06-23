@@ -6,10 +6,14 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class FoodFriend {
 	static ArrayList<String> recipes = new ArrayList<>();
 	static ArrayList<Ingredients> ingredients = new ArrayList<>();
+	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
 	public void run() {
 		File saveFile = new File("SaveFile.txt");
@@ -21,7 +25,7 @@ public class FoodFriend {
 		menu();
 	}
 	
-	public static void readFile() {
+	public static void readFile() {	
 		try (BufferedReader reader = new BufferedReader(new FileReader("SaveFile.txt"))) {
 			String item;
 			
@@ -29,7 +33,7 @@ public class FoodFriend {
 				String[] temp = item.split(",");
 				
 				for (int i = 0; i < temp.length; i++) {
-					Ingredients ingredient = new Ingredients(temp[i], temp[i+1]);
+					Ingredients ingredient = new Ingredients(temp[i], LocalDate.parse(temp[i+1], formatter));
 					ingredients.add(ingredient);
 				}
 			}
@@ -67,6 +71,7 @@ public class FoodFriend {
 			
 			try {
 				input = scanner.nextInt();
+				scanner.nextLine();
 				
 				newPage();
 				switch (input) {
@@ -81,7 +86,7 @@ public class FoodFriend {
 					break;
 				
 				case 2: // Manage Pantry
-					managePantry();
+					managePantry(scanner);
 					break;
 					
 				case 3: // Exit
@@ -110,18 +115,85 @@ public class FoodFriend {
 		// Will call and interact with the API Class
 	}
 	
-	public static void managePantry() {
+	public static void managePantry(Scanner scanner) {
 		// WIP
 		// Work In Progress
 		
 		newPage();
 		File saveFile = new File("SaveFile.txt");
+		String input;
+		LocalDate date;
 		
 		if (saveFile.exists()) {
 			displayPantry();
 		} else {
-			System.out.println("User pantry not found. Start inputing ingredients!");
+			System.out.println("User pantry not found. Start inputing ingredients!"
+					+ "You will be prompted to enter the name of the ingredient, then the expiration date (if there is one)!\n");
 			
+			while (true) {
+				System.out.println("Enter the name of the ingredient (Say 'Stop' to stop inputting ingredients):");
+				input = scanner.nextLine().toLowerCase();
+				
+				if (input.equals("stop")) {
+					break;
+				} else {
+					Ingredients ingredient = new Ingredients(input, null);
+					newPage();
+					
+					while (true) {
+						System.out.println("Enter the expiration date of the ingredient in Year-Month-Day format (Say 'None' is there isn't one): ");
+						input = scanner.nextLine();
+						
+						try {
+							date = LocalDate.parse(input, formatter);
+							
+							if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now())) {
+								System.out.println("\nError: The entered date is already expired, please try again.\n");
+							} else {
+								break;
+							}
+						} catch (DateTimeParseException e) {
+							System.out.println("\nError: Date input is invalid. Please try again.\n");
+						}
+					}
+					
+					newPage();
+					ingredient.setExpirationDate(date);
+					
+					while (true) {
+						System.out.println("Is the given information entered correctly?\n"
+								+ "\"" + ingredient.getName() + "\"" + ", " + "\"" + ingredient.getExpirationDate()
+								+ "\n1. Yes"
+								+ "\n2. No"
+								+ "\nEnter option here: ");
+						
+						try {
+							input = scanner.nextLine();
+							
+							switch(input) {
+							case "1":
+								// Something that will move the user to the inputs of the next ingredient
+								// WIP
+								break;
+								
+							case "2":
+								// Something that will make the user redo the inputs of the current ingredient
+								// WIP
+								break;
+								
+							default:
+								System.out.println("\nError: Input not recognized.");
+								break;
+							}
+						} catch (Exception e) {
+							
+						}
+					}
+					
+					// Something that will make the user redo the inputs of the ingredient and the expiration date
+					// WIP
+				}
+			}
 		}
 	}
 	

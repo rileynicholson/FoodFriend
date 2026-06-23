@@ -1,7 +1,10 @@
+import java.time.LocalDate;
+
 public class Ingredients {
-	private String name, expirationDate;
+	private String name; 
+	private LocalDate expirationDate;
 	
-	public Ingredients(String name, String expirationDate) {
+	public Ingredients(String name, LocalDate expirationDate) {
 		this.name = name;
 		this.expirationDate = expirationDate;
 	}
@@ -14,11 +17,11 @@ public class Ingredients {
 		this.name = name;
 	}
 
-	public String getExpirationDate() {
+	public LocalDate getExpirationDate() {
 		return expirationDate;
 	}
 
-	public void setExpirationDate(String expirationDate) {
+	public void setExpirationDate(LocalDate expirationDate) {
 		this.expirationDate = expirationDate;
 	}
 }
