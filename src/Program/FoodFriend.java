@@ -1,3 +1,4 @@
+package Program;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileReader;
@@ -78,7 +79,7 @@ public class FoodFriend {
 				case 1: // Generate Recipes
 					File saveFile = new File("SaveFile.txt");
 					
-					if (saveFile.exists()) {
+					if (saveFile.exists()||!ingredients.isEmpty()) {
 						generateRecipes();
 					} else {
 						System.out.println("Error: No ingredients found in the Pantry. Recipes cannot be generated.");
@@ -116,90 +117,124 @@ public class FoodFriend {
 	}
 	
 	public static void managePantry(Scanner scanner) {
-		// WIP
-		// Work In Progress
-		
 		newPage();
 		File saveFile = new File("SaveFile.txt");
 		String input;
-		LocalDate date;
+		LocalDate date; // Variable might be removed down the line as this method gets designed
 		
 		if (saveFile.exists()) {
 			displayPantry();
 		} else {
 			System.out.println("User pantry not found. Start inputing ingredients!"
-					+ "You will be prompted to enter the name of the ingredient, then the expiration date (if there is one)!\n");
+					+ "\nYou will be prompted to enter the name of the ingredient, then the expiration date (if there is one)!\n");
 			
-			while (true) {
-				System.out.println("Enter the name of the ingredient (Say 'Stop' to stop inputting ingredients):");
-				input = scanner.nextLine().toLowerCase();
+			addIngredientsToPantry(scanner);
+		}
+		
+		// Prompts the user options of what to do after their pantry is displayed
+		// I will complete the 'displayPantry()' method then work on the rest of this method
+		// WIP
+	}
+	
+	public static void addIngredientsToPantry(Scanner scanner) {
+		String input;
+		LocalDate date;
+		
+		while (true) {
+			System.out.println("Enter the name of the ingredient (Say 'Stop' to stop inputting ingredients):");
+			input = scanner.nextLine().toLowerCase();
+			
+			if (input.equals("stop")) {
+				newPage();
+				break;
+			} else {
+				Ingredients ingredient = new Ingredients(input, null);
+				newPage();
 				
-				if (input.equals("stop")) {
-					break;
-				} else {
-					Ingredients ingredient = new Ingredients(input, null);
-					newPage();
+				while (true) {
+					System.out.println("Enter the expiration date of the ingredient in Year-Month-Day format (Say 'None' is there isn't one): ");
+					input = scanner.nextLine();
 					
-					while (true) {
-						System.out.println("Enter the expiration date of the ingredient in Year-Month-Day format (Say 'None' is there isn't one): ");
+					try {
+						date = LocalDate.parse(input, formatter);
+						
+						if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now())) {
+							System.out.println("\nError: The entered date is already expired, please try again.\n");
+						} else {
+							break;
+						}
+					} catch (DateTimeParseException e) {
+						System.out.println("\nError: Date input is invalid. Please try again.\n");
+					}
+				}
+				
+				newPage();
+				ingredient.setExpirationDate(date);
+				
+				while (true) {
+					System.out.println("Is the given information entered correctly?\n"
+							+ "\"" + ingredient.getName() + "\"" + ", " + "\"" + ingredient.getExpirationDate()
+							+ "\n1. Yes"
+							+ "\n2. No"
+							+ "\nEnter option here: ");
+					
+					try {
 						input = scanner.nextLine();
 						
-						try {
-							date = LocalDate.parse(input, formatter);
+						switch(input) {
+						case "1":
+							ingredient.setName(capitalize(ingredient.getName()));
+							ingredients.add(ingredient);
+							newPage();
+							System.out.println(ingredient.getName() + " added to pantry!\n");
+							break;
 							
-							if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now())) {
-								System.out.println("\nError: The entered date is already expired, please try again.\n");
-							} else {
-								break;
-							}
-						} catch (DateTimeParseException e) {
-							System.out.println("\nError: Date input is invalid. Please try again.\n");
+						case "2":
+							newPage();
+							System.out.println(ingredient.getName() + " removed!\n");
+							break;
+							
+						default:
+							System.out.println("\nError: Input not recognized. Please try again.\n");
+							break;
 						}
+					} catch (Exception e) {
+						newPage();
+						System.out.println("Error: Input is not valid. Please try again.\n");
+						scanner.nextLine();
 					}
 					
-					newPage();
-					ingredient.setExpirationDate(date);
-					
-					while (true) {
-						System.out.println("Is the given information entered correctly?\n"
-								+ "\"" + ingredient.getName() + "\"" + ", " + "\"" + ingredient.getExpirationDate()
-								+ "\n1. Yes"
-								+ "\n2. No"
-								+ "\nEnter option here: ");
-						
-						try {
-							input = scanner.nextLine();
-							
-							switch(input) {
-							case "1":
-								// Something that will move the user to the inputs of the next ingredient
-								// WIP
-								break;
-								
-							case "2":
-								// Something that will make the user redo the inputs of the current ingredient
-								// WIP
-								break;
-								
-							default:
-								System.out.println("\nError: Input not recognized.");
-								break;
-							}
-						} catch (Exception e) {
-							
-						}
-					}
-					
-					// Something that will make the user redo the inputs of the ingredient and the expiration date
+					// This is a error waiting to happen
+					// Completely ends the loop even if the user entered something wrong
+					// However, this is just a temporary placeholder to end this loop while I work on other features
+					// This error will be fixed once I come up with a proper solution
 					// WIP
+					break;
 				}
+				
+				// Originally wanted to put something here that would have the user redo their inputs
+				// Just keeping this here as a reminder to myself just in case this current design doesn't work
 			}
 		}
 	}
 	
+	// For formatting
+	// Just in case the user enters a lower case ingredient
+	public static String capitalize(String name) {
+		String firstLetter = "";
+		
+		firstLetter += name.charAt(0);
+		firstLetter = firstLetter.toUpperCase();
+		
+		name = name.replace(name.charAt(0), firstLetter.charAt(0));
+		
+		return name;
+	}
+	
 	public static void displayPantry() {
 		try (BufferedReader reader = new BufferedReader(new FileReader("SaveFile.txt"))) {
-			
+			// Displays the user's pantry
+			// WIP
 		} catch (IOException e) {
 			System.out.println("Error: Save file exists, but cannot be found.\n");
 		}
