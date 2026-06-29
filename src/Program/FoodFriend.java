@@ -32,11 +32,13 @@ public class FoodFriend {
 			
 			while ((item = reader.readLine()) != null) {
 				String[] temp = item.split(",");
+				Ingredients ingredient = new Ingredients(temp[0], null);
 				
-				for (int i = 0; i < temp.length; i++) {
-					Ingredients ingredient = new Ingredients(temp[i], LocalDate.parse(temp[i+1], formatter));
-					ingredients.add(ingredient);
+				if (!temp[1].equals("null")) {
+					ingredient.setExpirationDate(LocalDate.parse(temp[1], formatter));
 				}
+				
+				ingredients.add(ingredient);
 			}
 		} catch (IOException e) {
 			// Temporary procedure for error
@@ -46,10 +48,10 @@ public class FoodFriend {
 		}
 	}
 	
-	public static void writeFile() {
+	public static void saveFile() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveFile.txt", true))) {
 			for (int i = 0; i < ingredients.size(); i++) {
-				writer.write(ingredients.get(i).getName() + "," + ingredients.get(i).getExpirationDate());
+				writer.write(ingredients.get(i).getName() + "," + ingredients.get(i).getExpirationDate() + "\n");
 			}
 		} catch (IOException e) {
 			// Temporary procedure for error
@@ -105,7 +107,7 @@ public class FoodFriend {
 			} catch (Exception e) {
 				newPage();
 				System.out.println("Error: Input is not valid.\n");
-				scanner.nextLine();
+				//scanner.nextLine();
 			}
 		}
 	}
@@ -124,16 +126,22 @@ public class FoodFriend {
 		
 		if (saveFile.exists()) {
 			displayPantry();
+			
+			System.out.println("\nManage Pantry Options"
+					+ "\n-----------------------------"
+					+ "\n1. Modify Ingredient"
+					+ "\n2. Remove Ingredient"
+					+ "\n3. Exit\n"
+					+ "\nEnter Option Here:");
+			input = scanner.nextLine();
+			
 		} else {
 			System.out.println("User pantry not found. Start inputing ingredients!"
 					+ "\nYou will be prompted to enter the name of the ingredient, then the expiration date (if there is one)!\n");
 			
 			addIngredientsToPantry(scanner);
+			saveFile();
 		}
-		
-		// Prompts the user options of what to do after their pantry is displayed
-		// I will complete the 'displayPantry()' method then work on the rest of this method
-		// WIP
 	}
 	
 	public static void addIngredientsToPantry(Scanner scanner) {
@@ -155,16 +163,21 @@ public class FoodFriend {
 					System.out.println("Enter the expiration date of the ingredient in Year-Month-Day format (Say 'None' is there isn't one): ");
 					input = scanner.nextLine();
 					
-					try {
-						date = LocalDate.parse(input, formatter);
-						
-						if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now())) {
-							System.out.println("\nError: The entered date is already expired, please try again.\n");
-						} else {
-							break;
+					if (!input.equals("none")) {
+						try {
+							date = LocalDate.parse(input, formatter);
+							
+							if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now())) {
+								System.out.println("\nError: The entered date is already expired, please try again.\n");
+							} else {
+								break;
+							}
+						} catch (DateTimeParseException e) {
+							System.out.println("\nError: Date input is invalid. Please try again.\n");
 						}
-					} catch (DateTimeParseException e) {
-						System.out.println("\nError: Date input is invalid. Please try again.\n");
+					} else {
+						date = null;
+						break;
 					}
 				}
 				
@@ -173,7 +186,7 @@ public class FoodFriend {
 				
 				while (true) {
 					System.out.println("Is the given information entered correctly?\n"
-							+ "\"" + ingredient.getName() + "\"" + ", " + "\"" + ingredient.getExpirationDate()
+							+ "\"" + ingredient.getName() + "\"" + ", " + "\"" + ingredient.getExpirationDate() + "\""
 							+ "\n1. Yes"
 							+ "\n2. No"
 							+ "\nEnter option here: ");
@@ -190,6 +203,7 @@ public class FoodFriend {
 							break;
 							
 						case "2":
+							ingredient.setName(capitalize(ingredient.getName()));
 							newPage();
 							System.out.println(ingredient.getName() + " removed!\n");
 							break;
@@ -201,7 +215,7 @@ public class FoodFriend {
 					} catch (Exception e) {
 						newPage();
 						System.out.println("Error: Input is not valid. Please try again.\n");
-						scanner.nextLine();
+						//scanner.nextLine();
 					}
 					
 					// This is a error waiting to happen
@@ -220,23 +234,61 @@ public class FoodFriend {
 	
 	// For formatting
 	// Just in case the user enters a lower case ingredient
+	// ERROR: "TomaTo"
 	public static String capitalize(String name) {
-		String firstLetter = "";
+		String firstLetterReplace = "", firstLetterSearch = "";
 		
-		firstLetter += name.charAt(0);
-		firstLetter = firstLetter.toUpperCase();
+		firstLetterReplace += name.charAt(0);
+		firstLetterReplace = firstLetterReplace.toUpperCase();
 		
-		name = name.replace(name.charAt(0), firstLetter.charAt(0));
+		firstLetterSearch += name.charAt(0);
+		
+		name = name.replaceFirst(firstLetterSearch, firstLetterReplace);
 		
 		return name;
 	}
 	
 	public static void displayPantry() {
 		try (BufferedReader reader = new BufferedReader(new FileReader("SaveFile.txt"))) {
-			// Displays the user's pantry
-			// WIP
+			String line;
+			ingredients.clear();
+			
+			while ((line = reader.readLine()) != null) {
+				Ingredients ingredient = new Ingredients(null, null);
+				String[] temp = line.split(",");
+				
+				ingredient.setName(temp[0]);
+				
+				if (!temp[1].equals("null")) {
+					ingredient.setExpirationDate(LocalDate.parse(temp[1], formatter));
+				}
+				
+				ingredients.add(ingredient);
+			}
 		} catch (IOException e) {
 			System.out.println("Error: Save file exists, but cannot be found.\n");
+		}
+		
+		System.out.println("Pantry:\n\n");
+		for (int i = 0; i < ingredients.size(); i++) {
+			int ingredientsOnRow = 0;
+			//LocalDate[] dates = new LocalDate[3];
+			LocalDate[] dates = {null, null, null};
+			
+			while (ingredientsOnRow < 3 && i < ingredients.size()) {
+				System.out.printf("%-24s", ingredients.get(i).getName());
+				dates[ingredientsOnRow] = ingredients.get(i).getExpirationDate();
+				ingredientsOnRow++;
+				i++;
+			}
+			
+			System.out.println("\n");
+			for (int j = 0; j < ingredientsOnRow; j++) {
+				System.out.printf("%-24s", dates[j]);
+			}
+			
+			System.out.println("\n----------------------------------------------------------------\n");
+			i--;
 		}
 	}
 	
