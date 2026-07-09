@@ -1,21 +1,26 @@
 package Program;
-import java.util.Scanner;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.BufferedReader;
 import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.util.ArrayList;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class FoodFriend {
+	
 	static ArrayList<String> recipes = new ArrayList<>();
 	static ArrayList<Ingredients> ingredients = new ArrayList<>();
 	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
+	/**
+	 * Starts up the program.
+	 */
 	public void run() {
 		File saveFile = new File("SaveFile.txt");
 		
@@ -26,6 +31,9 @@ public class FoodFriend {
 		menu();
 	}
 	
+	/**
+	 * Reads the user's save file.
+	 */
 	public static void readFile() {	
 		try (BufferedReader reader = new BufferedReader(new FileReader("SaveFile.txt"))) {
 			String item;
@@ -41,26 +49,26 @@ public class FoodFriend {
 				ingredients.add(ingredient);
 			}
 		} catch (IOException e) {
-			// Temporary procedure for error
-			// Placeholder sequence for now
-			System.out.println("Error: Save File exists, but is not found.");
-			System.exit(-1);
+			System.out.println("ERROR: Save File exists, but is not found. No data has been loaded.\n");
 		}
 	}
 	
+	/**
+	 * Saves the ingredients that the user has in a .txt file.
+	 */
 	public static void saveFile() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveFile.txt", true))) {
 			for (int i = 0; i < ingredients.size(); i++) {
 				writer.write(ingredients.get(i).getName() + "," + ingredients.get(i).getExpirationDate() + "\n");
 			}
 		} catch (IOException e) {
-			// Temporary procedure for error
-			// Placeholder sequence for now
-			System.out.println("Error: Not able to save.");
-			System.exit(-1);
+			System.out.println("ERROR: Save file is not able to save. No data is saved.\n");
 		}
 	}
 	
+	/**
+	 * Displays the main menu of the program.
+	 */
 	public static void menu() {
 		Scanner scanner = new Scanner(System.in);
 		int input = 0;
@@ -78,78 +86,117 @@ public class FoodFriend {
 				
 				newPage();
 				switch (input) {
-				case 1: // Generate Recipes
-					File saveFile = new File("SaveFile.txt");
+					case 1: // Generate Recipes
+						File saveFile = new File("SaveFile.txt");
 					
-					if (saveFile.exists()||!ingredients.isEmpty()) {
-						generateRecipes();
-					} else {
-						System.out.println("Error: No ingredients found in the Pantry. Recipes cannot be generated.");
-					}
-					break;
+						if (saveFile.exists() || !ingredients.isEmpty()) {
+							generateRecipes();
+						} else {
+							System.out.println("Error: No ingredients found in the Pantry. Recipes cannot be generated.");
+						}
+						break;
 				
-				case 2: // Manage Pantry
-					managePantry(scanner);
-					break;
+					case 2: // Manage Pantry
+						managePantry(scanner);
+						break;
 					
-				case 3: // Exit
-					System.out.println("Exiting the program, thank you for using!");
-					scanner.close();
-					System.exit(1);
-					break;
+					case 3: // Exit
+						System.out.println("Exiting the program, thank you for using!");
+						scanner.close();
+						System.exit(1);
+						break;
 					
-				default: // Error
-					System.out.println("Error: Input is not recognized. Please try again.");
-					break;
+					default: // Error
+						System.out.println("Error: Input is not recognized. Please try again.");
+						break;
 				}
 				
 				System.out.println();
 			} catch (Exception e) {
 				newPage();
 				System.out.println("Error: Input is not valid.\n");
-				//scanner.nextLine();
 			}
 		}
 	}
 	
+	/**
+	 * Gathers recipes that the user can make from the API.
+	 */
 	public static void generateRecipes() {
-		// WIP
-		// Work In Progress
-		// Will call and interact with the API Class
+		// Work In Progress (WIP)
+		// Will call and interact with the API Spoonacular Class
 	}
 	
+	/**
+	 * Displays the menu for the 'Manage Pantry' option.
+	 * 
+	 * @param scanner for user input
+	 */
 	public static void managePantry(Scanner scanner) {
 		newPage();
 		File saveFile = new File("SaveFile.txt");
 		String input;
-		LocalDate date; // Variable might be removed down the line as this method gets designed
 		
 		if (saveFile.exists()) {
 			displayPantry();
 			
-			System.out.println("\nManage Pantry Options"
-					+ "\n-----------------------------"
-					+ "\n1. Modify Ingredient"
-					+ "\n2. Remove Ingredient"
-					+ "\n3. Exit\n"
-					+ "\nEnter Option Here:");
-			input = scanner.nextLine();
-			
+			while (true) {
+				boolean breakLoop = false;
+				System.out.println("\nManage Pantry Options"
+						+ "\n-----------------------------"
+						+ "\n1. Modify Ingredient"
+						+ "\n2. Remove Ingredient"
+						+ "\n3. Exit\n"
+						+ "\nEnter Option Here:");
+				input = scanner.nextLine();
+				
+				switch (input) {
+					case "1": // Modify Ingredient
+						break;
+					
+					case "2": // Remove Ingredient
+						break;
+					
+					case "3": // Exit
+						newPage();
+						breakLoop = true;
+						break;
+					
+					default: // Input is not an option
+						System.out.println("Error: Input is not recognized. Please try again.");
+						break;
+				}
+				
+				// Temporary solution for the exit option
+				// Subject to change
+				if (breakLoop) {
+					break;
+				}
+				
+				displayPantry();
+			}
 		} else {
 			System.out.println("User pantry not found. Start inputing ingredients!"
-					+ "\nYou will be prompted to enter the name of the ingredient, then the expiration date (if there is one)!\n");
+					+ "\nYou will be prompted to enter the name of the ingredient, "
+					+ "then the expiration date (if there is one)!\n");
 			
 			addIngredientsToPantry(scanner);
 			saveFile();
 		}
 	}
 	
+	/**
+	 * Adds ingredients to the user's pantry.
+	 * 
+	 * @param scanner for user input
+	 */
 	public static void addIngredientsToPantry(Scanner scanner) {
 		String input;
 		LocalDate date;
 		
 		while (true) {
-			System.out.println("Enter the name of the ingredient (Say 'Stop' to stop inputting ingredients):");
+			System.out.println("Enter the name of the ingredient "
+					+ "(Say 'Stop' to stop inputting ingredients):");
 			input = scanner.nextLine().toLowerCase();
 			
 			if (input.equals("stop")) {
@@ -160,7 +207,8 @@ public class FoodFriend {
 				newPage();
 				
 				while (true) {
-					System.out.println("Enter the expiration date of the ingredient in Year-Month-Day format (Say 'None' is there isn't one): ");
+					System.out.println("Enter the expiration date of the ingredient in Year-Month-Day format "
+							+ "(Say 'None' is there isn't one): ");
 					input = scanner.nextLine();
 					
 					if (!input.equals("none")) {
@@ -168,7 +216,8 @@ public class FoodFriend {
 							date = LocalDate.parse(input, formatter);
 							
 							if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now())) {
-								System.out.println("\nError: The entered date is already expired, please try again.\n");
+								System.out.println("\nError: The entered date is already expired, "
+										+ "please try again.\n");
 							} else {
 								break;
 							}
@@ -194,28 +243,27 @@ public class FoodFriend {
 					try {
 						input = scanner.nextLine();
 						
-						switch(input) {
-						case "1":
-							ingredient.setName(capitalize(ingredient.getName()));
-							ingredients.add(ingredient);
-							newPage();
-							System.out.println(ingredient.getName() + " added to pantry!\n");
-							break;
+						switch (input) {
+							case "1":
+								ingredient.setName(capitalize(ingredient.getName()));
+								ingredients.add(ingredient);
+								newPage();
+								System.out.println(ingredient.getName() + " added to pantry!\n");
+								break;
 							
-						case "2":
-							ingredient.setName(capitalize(ingredient.getName()));
-							newPage();
-							System.out.println(ingredient.getName() + " removed!\n");
-							break;
+							case "2":
+								ingredient.setName(capitalize(ingredient.getName()));
+								newPage();
+								System.out.println(ingredient.getName() + " removed!\n");
+								break;
 							
-						default:
-							System.out.println("\nError: Input not recognized. Please try again.\n");
-							break;
+							default:
+								System.out.println("\nError: Input not recognized. Please try again.\n");
+								break;
 						}
 					} catch (Exception e) {
 						newPage();
 						System.out.println("Error: Input is not valid. Please try again.\n");
-						//scanner.nextLine();
 					}
 					
 					// This is a error waiting to happen
@@ -232,9 +280,30 @@ public class FoodFriend {
 		}
 	}
 	
-	// For formatting
-	// Just in case the user enters a lower case ingredient
-	// ERROR: "TomaTo"
+	/**
+	 * Modifies an ingredient from the user's ingredient list.
+	 * 
+	 * @param scanner for gathering user input
+	 */
+	public static void modifyIngredient(Scanner scanner) {
+		// Work In Progress (WIP)
+	}
+	
+	/**
+	 * Removes an ingredient from the user's ingredient list.
+	 * 
+	 * @param scanner for gathering user input
+	 */
+	public static void removeIngredient(Scanner scanner) {
+		// Work In Progress (WIP)
+	}
+	
+	/**
+	 * Capitalizes a word if it is considered lower case for formatting.
+	 * 
+	 * @param name the word 
+	 * @return the now capitalized word
+	 */
 	public static String capitalize(String name) {
 		String firstLetterReplace = "", firstLetterSearch = "";
 		
@@ -248,6 +317,9 @@ public class FoodFriend {
 		return name;
 	}
 	
+	/**
+	 * Displays the user's pantry to the user.
+	 */
 	public static void displayPantry() {
 		try (BufferedReader reader = new BufferedReader(new FileReader("SaveFile.txt"))) {
 			String line;
@@ -292,6 +364,9 @@ public class FoodFriend {
 		}
 	}
 	
+	/**
+	 * Spreads the program's outputs out using print statements to signify a new page.
+	 */
 	public static void newPage() {
 		for (int i = 0; i < 30; i++) {
 			System.out.println();

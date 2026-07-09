@@ -2,8 +2,12 @@ package Program;
 
 import java.time.LocalDate;
 
+/**
+ * Represents an ingredient that contains a name and an expiration date.
+ */
 public class Ingredients {
-	private String name; 
+	
+	private String name;
 	private LocalDate expirationDate;
 	
 	public Ingredients(String name, LocalDate expirationDate) {
