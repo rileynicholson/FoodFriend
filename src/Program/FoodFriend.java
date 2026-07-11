@@ -14,9 +14,9 @@ import java.util.Scanner;
 
 public class FoodFriend {
 	
-	static ArrayList<String> recipes = new ArrayList<>();
-	static ArrayList<Ingredients> ingredients = new ArrayList<>();
-	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	public static ArrayList<String> recipes = new ArrayList<>();
+	public static ArrayList<Ingredients> ingredients = new ArrayList<>();
+	public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
 	/**
 	 * Starts up the program.
@@ -57,7 +57,7 @@ public class FoodFriend {
 	 * Saves the ingredients that the user has in a .txt file.
 	 */
 	public static void saveFile() {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveFile.txt", true))) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveFile.txt", false))) {
 			for (int i = 0; i < ingredients.size(); i++) {
 				writer.write(ingredients.get(i).getName() + "," + ingredients.get(i).getExpirationDate() + "\n");
 			}
@@ -137,27 +137,37 @@ public class FoodFriend {
 		File saveFile = new File("SaveFile.txt");
 		String input;
 		
-		if (saveFile.exists()) {
+		if (saveFile.exists() && !ingredients.isEmpty()) {
 			displayPantry();
 			
 			while (true) {
 				boolean breakLoop = false;
 				System.out.println("\nManage Pantry Options"
 						+ "\n-----------------------------"
-						+ "\n1. Modify Ingredient"
-						+ "\n2. Remove Ingredient"
-						+ "\n3. Exit\n"
+						+ "\n1. Add Ingredient"
+						+ "\n2. Modify Ingredient"
+						+ "\n3. Remove Ingredient"
+						+ "\n4. Exit\n"
 						+ "\nEnter Option Here:");
 				input = scanner.nextLine();
 				
 				switch (input) {
-					case "1": // Modify Ingredient
+					case "1": // Add Ingredient
+						newPage();
+						addIngredientsToPantry(scanner);
+						break;
+				
+					case "2": // Modify Ingredient
+						newPage();
+						
 						break;
 					
-					case "2": // Remove Ingredient
+					case "3": // Remove Ingredient
+						newPage();
+						removeIngredient(scanner);
 						break;
 					
-					case "3": // Exit
+					case "4": // Exit
 						newPage();
 						breakLoop = true;
 						break;
@@ -247,6 +257,7 @@ public class FoodFriend {
 							case "1":
 								ingredient.setName(capitalize(ingredient.getName()));
 								ingredients.add(ingredient);
+								saveFile();
 								newPage();
 								System.out.println(ingredient.getName() + " added to pantry!\n");
 								break;
@@ -266,7 +277,7 @@ public class FoodFriend {
 						System.out.println("Error: Input is not valid. Please try again.\n");
 					}
 					
-					// This is a error waiting to happen
+					// This is an error waiting to happen
 					// Completely ends the loop even if the user entered something wrong
 					// However, this is just a temporary placeholder to end this loop while I work on other features
 					// This error will be fixed once I come up with a proper solution
@@ -295,11 +306,81 @@ public class FoodFriend {
 	 * @param scanner for gathering user input
 	 */
 	public static void removeIngredient(Scanner scanner) {
-		// Work In Progress (WIP)
+		String input;
+		int index = 0;
+		displayPantry();
+		
+		while (true) {
+			System.out.println("\nEnter the ingredient you want to remove "
+					+ "(Enter 'exit' to go back to menu): ");
+			input = scanner.nextLine();
+			
+			if (input.toLowerCase().equals("exit")) {
+				break;
+			}
+			
+			newPage();
+			
+			index = linearSearch(input);
+			
+			if (index != -1) {
+				break;
+			} else {
+				displayPantry();
+				System.out.println("\nError: Ingredient not found "
+						+ "in the user's list of ingredients. "
+						+ "Please try again.");
+			}
+		}
+		
+		if (!input.toLowerCase().equals("exit")) {
+			while (true) {
+				System.out.println("Are you sure you want to remove this ingredient? "
+						+ "\n\"" + ingredients.get(index).getName() + "\"" + ", " + "\"" + ingredients.get(index).getExpirationDate() + "\""
+						+ "\n1. Yes"
+						+ "\n2. No"
+						+ "\nEnter option here: ");
+				input = scanner.nextLine();
+				
+				if (input.equals("1")) {
+					ingredients.remove(index);
+					
+					saveFile();
+					
+					newPage();
+					break;
+				} else if (input.equals("2")) {
+					newPage();
+					break;
+				} else {
+					newPage();
+					System.out.println("Error: Input not recognized, "
+							+ "please try again.");
+				}
+			}
+		}
 	}
 	
 	/**
-	 * Capitalizes a word if it is considered lower case for formatting.
+	 * Searches for an ingredient in the ArrayList of user ingredients using the Linear Search Algorithm.
+	 * 
+	 * @param target the search term
+	 * @return the index value of the ingredient if it exists
+	 */
+	public static int linearSearch(String target) {
+		target = capitalize(target);
+		
+		for (int i = 0; i < ingredients.size(); i++) {
+			if (target.equals(ingredients.get(i).getName())) {
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Capitalizes a word if considered lower case for formatting.
 	 * 
 	 * @param name the word 
 	 * @return the now capitalized word
@@ -341,7 +422,8 @@ public class FoodFriend {
 			System.out.println("Error: Save file exists, but cannot be found.\n");
 		}
 		
-		System.out.println("Pantry:\n\n");
+		System.out.println("Pantry:"
+				+ "\n------------\n");
 		for (int i = 0; i < ingredients.size(); i++) {
 			int ingredientsOnRow = 0;
 			//LocalDate[] dates = new LocalDate[3];

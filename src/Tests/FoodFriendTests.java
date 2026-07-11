@@ -27,4 +27,26 @@ class FoodFriendTests {
 		assertNotEquals(newTestWord, "TomaTo");
 		assertEquals(newTestWord, "Tomato");
 	}
+	
+	@Test
+	void testLinearSearch_WithNormalTerm() {
+		Ingredients ingredient1 = new Ingredients("Tomato", null);
+		
+		FoodFriend.ingredients.add(ingredient1);
+		int index = FoodFriend.linearSearch("Tomato");
+		
+		assertNotEquals(index, -1);
+		assertEquals(index, 0);
+	}
+	
+	@Test
+	void testLinearSearch_WithLowercaseTerm() {
+		Ingredients ingredient1 = new Ingredients("Tomato", null);
+		
+		FoodFriend.ingredients.add(ingredient1);
+		int index = FoodFriend.linearSearch("tomato");
+		
+		assertNotEquals(index, -1);
+		assertEquals(index, 0);
+	}
 }
