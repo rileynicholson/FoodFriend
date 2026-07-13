@@ -19,6 +19,15 @@ class FoodFriendTests {
 	}
 	
 	@Test
+	void testCapitalize_NotRegularWord() {
+		String testWord = "ncrwlq";
+		String newTestWord = FoodFriend.capitalize(testWord);
+		
+		assertNotEquals(testWord, newTestWord);
+		assertEquals(newTestWord, "Ncrwlq");
+	}
+	
+	@Test
 	void testCapitalize_WordWithMultipleOfSameFirstLetter() {
 		String testWord = "tomato";
 		String newTestWord = FoodFriend.capitalize(testWord);
@@ -29,8 +38,17 @@ class FoodFriendTests {
 	}
 	
 	@Test
+	void testCapitalize_WordAlreadyCapitalized() {
+		String testWord = "Tomato";
+		String newTestWord = FoodFriend.capitalize(testWord);
+		
+		assertEquals(testWord, newTestWord);
+		assertEquals(newTestWord, "Tomato");
+	}
+	
+	@Test
 	void testLinearSearch_WithNormalTerm() {
-		Ingredients ingredient1 = new Ingredients("Tomato", null);
+		Ingredient ingredient1 = new Ingredient("Tomato", null);
 		
 		FoodFriend.ingredients.add(ingredient1);
 		int index = FoodFriend.linearSearch("Tomato");
@@ -41,12 +59,23 @@ class FoodFriendTests {
 	
 	@Test
 	void testLinearSearch_WithLowercaseTerm() {
-		Ingredients ingredient1 = new Ingredients("Tomato", null);
+		Ingredient ingredient1 = new Ingredient("Tomato", null);
 		
 		FoodFriend.ingredients.add(ingredient1);
 		int index = FoodFriend.linearSearch("tomato");
 		
 		assertNotEquals(index, -1);
 		assertEquals(index, 0);
+	}
+	
+	@Test
+	void testLinearSearch_WithTermThatIsNotInsideIngredients() {
+		Ingredient ingredient1 = new Ingredient("Tomato", null);
+		
+		FoodFriend.ingredients.add(ingredient1);
+		int index = FoodFriend.linearSearch("orange");
+		
+		assertNotEquals(index, 0);
+		assertEquals(index, -1);
 	}
 }
