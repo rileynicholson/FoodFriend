@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for the FoodFriend class.
+ * Test cases for the FoodFriend class.
  */
 class FoodFriendTests {
 	

@@ -90,7 +90,7 @@ public class FoodFriend {
 						File saveFile = new File("SaveFile.txt");
 					
 						if (saveFile.exists() || !ingredients.isEmpty()) {
-							generateRecipes();
+							generateRecipes(scanner);
 						} else {
 							System.out.println("Error: No ingredients found in the Pantry. Recipes cannot be generated.");
 						}
@@ -106,7 +106,7 @@ public class FoodFriend {
 						System.exit(1);
 						break;
 					
-					default: // Error
+					default: // Unrecognized input
 						System.out.println("Error: Input is not recognized. Please try again.");
 						break;
 				}
@@ -121,10 +121,55 @@ public class FoodFriend {
 	
 	/**
 	 * Gathers recipes that the user can make from the API.
+	 * 
+	 * @param scanner for user input
 	 */
-	public static void generateRecipes() {
-		// Work In Progress (WIP)
-		// Will call and interact with the API Spoonacular Class
+	public static void generateRecipes(Scanner scanner) {
+		newPage();
+		File saveFile = new File("SaveFile.txt");
+		String input;
+		
+		if (saveFile.exists() && !ingredients.isEmpty()) {
+			while (true) {
+				boolean breakLoop = false;
+				System.out.println("What kind of recipe do you want?"
+						+ "\n1. Main Course"
+						+ "\n2. Dessert"
+						+ "\n3. Snack"
+						+ "\n4. Exit\n"
+						+ "\nEnter option here: ");
+				input = scanner.nextLine();
+				
+				newPage();
+				switch (input) {
+				case "1": // Main Course
+					break;
+					
+				case "2": // Dessert
+					break;
+					
+				case "3": // Snack
+					break;
+					
+				case "4": // Exit
+					breakLoop = true;
+					break;
+					
+				default: // Unrecognized input
+					System.out.println("Error: Input is not recognized. Please try again.\n");
+					break;
+				}
+				
+				// Temporary solution for the exit option
+				// Subject to change
+				if (breakLoop) {
+					break;
+				}
+			}
+		} else {
+			System.out.println("Error: No ingredients found. "
+					+ "Recipes cannot be generated.");
+		}
 	}
 	
 	/**
@@ -154,27 +199,22 @@ public class FoodFriend {
 				newPage();
 				switch (input) {
 					case "1": // Add Ingredient
-						//newPage();
 						addIngredientsToPantry(scanner);
 						break;
 				
 					case "2": // Modify Ingredient
-						//newPage();
 						modifyIngredient(scanner);
 						break;
 					
 					case "3": // Remove Ingredient
-						//newPage();
 						removeIngredient(scanner);
 						break;
 					
 					case "4": // Exit
-						//newPage();
 						breakLoop = true;
 						break;
 					
-					default: // Input is not an option
-						//newPage();
+					default: // Unrecognized input
 						System.out.println("Error: Input is not recognized. Please try again.");
 						break;
 				}
@@ -252,43 +292,29 @@ public class FoodFriend {
 							+ "\n2. No"
 							+ "\nEnter option here: ");
 					
-					try {
-						input = scanner.nextLine();
-						
-						switch (input) {
-							case "1":
-								ingredient.setName(capitalize(ingredient.getName()));
-								ingredients.add(ingredient);
-								saveFile();
-								newPage();
-								System.out.println(ingredient.getName() + " added to pantry!\n");
-								break;
-							
-							case "2":
-								ingredient.setName(capitalize(ingredient.getName()));
-								newPage();
-								System.out.println(ingredient.getName() + " removed!\n");
-								break;
-							
-							default:
-								System.out.println("\nError: Input not recognized. Please try again.\n");
-								break;
-						}
-					} catch (Exception e) {
-						newPage();
-						System.out.println("Error: Input is not valid. Please try again.\n");
-					}
+					input = scanner.nextLine();
 					
-					// This is an error waiting to happen
-					// Completely ends the loop even if the user entered something wrong
-					// However, this is just a temporary placeholder to end this loop while I work on other features
-					// This error will be fixed once I come up with a proper solution
-					// WIP
-					break;
+					if (input.equals("1")) {
+						ingredient.setName(capitalize(ingredient.getName()));
+						ingredients.add(ingredient);
+						
+						saveFile();
+						newPage();
+						
+						System.out.println(ingredient.getName() + " added to pantry!\n");
+						break;
+					} else if (input.equals("2")) {
+						ingredient.setName(capitalize(ingredient.getName()));
+						
+						newPage();
+						
+						System.out.println(ingredient.getName() + " removed!\n");
+						break;
+					} else {
+						newPage();
+						System.out.println("\nError: Input not recognized. Please try again.\n");
+					}
 				}
-				
-				// Originally wanted to put something here that would have the user redo their inputs
-				// Just keeping this here as a reminder to myself just in case this current design doesn't work
 			}
 		}
 	}
@@ -300,11 +326,12 @@ public class FoodFriend {
 	 */
 	public static void modifyIngredient(Scanner scanner) {
 		String input, temp;
+		boolean dateWorks = true;
 		int index = 0;
-		displayPantry();
+		displayIngredients();
 		
 		while (true) {
-			System.out.println("\nEnter the ingredient you want to modify "
+			System.out.println("\nEnter the ingredient's name you want to modify "
 					+ "(Enter 'exit' to go back to the menu): ");
 			input = scanner.nextLine();
 			
@@ -319,7 +346,7 @@ public class FoodFriend {
 			if (index != -1) {
 				break;
 			} else {
-				displayPantry();
+				displayIngredients();
 				System.out.println("\nError: Ingredient not found "
 						+ "in the user's list of ingredients. "
 						+ "Please try again.");
@@ -371,32 +398,54 @@ public class FoodFriend {
 								+ "\nEnter the new expiration date here (Year-Month-Day format): ");
 						temp = scanner.nextLine();
 						
-						newPage();
+						try {
+							if (LocalDate.parse(temp, formatter).isAfter(LocalDate.now())) {
+								dateWorks = true;
+							} else {
+								newPage();
+								
+								System.out.println("Error: Input is expired, "
+										+ "please try again.\n");
+								dateWorks = false;
+							}
+						} catch (Exception e) {
+							newPage();
+							
+							System.out.println("Error: Input is not an actual date, "
+									+ "please try again.\n");
+							dateWorks = false;
+						}
 						
-						System.out.println("New expiration date: "
-								+ "\"" + temp + "\""
-								+ "\nIs this the correct new expiration date of the ingredient?"
-								+ "\n1. Yes"
-								+ "\n2. No"
-								+ "\nEnter option: ");
-						input = scanner.nextLine();
-						
-						newPage();
-						if (input.equals("1")) {
-							ingredients.get(index).setExpirationDate(LocalDate.parse(temp, formatter));
-							saveFile();
-							break;
-						} else if (input.equals("2")) {
-							continue;
-						} else {
-							System.out.println("Error: Input is not recognized, "
-									+ "please try again.");
+						if (dateWorks) {
+							newPage();
+							
+							System.out.println("New expiration date: "
+									+ "\"" + temp + "\""
+									+ "\nIs this the correct new expiration date of the ingredient?"
+									+ "\n1. Yes"
+									+ "\n2. No"
+									+ "\nEnter option: ");
+							input = scanner.nextLine();
+							
+							newPage();
+							if (input.equals("1")) {
+								ingredients.get(index).setExpirationDate(LocalDate.parse(temp, formatter));
+								saveFile();
+								break;
+							} else if (input.equals("2")) {
+								continue;
+							} else {
+								System.out.println("Error: Input is not recognized, "
+										+ "please try again.\n");
+							}
 						}
 					}
 				} else if (input.equals("3")) {
 					break;
 				} else {
-					
+					newPage();
+					System.out.println("Error: Input not recognized, "
+							+ "please try again.\n");
 				}
 			}
 		}
@@ -410,7 +459,7 @@ public class FoodFriend {
 	public static void removeIngredient(Scanner scanner) {
 		String input;
 		int index = 0;
-		displayPantry();
+		displayIngredients();
 		
 		while (true) {
 			System.out.println("\nEnter the ingredient you want to remove "
@@ -428,7 +477,7 @@ public class FoodFriend {
 			if (index != -1) {
 				break;
 			} else {
-				displayPantry();
+				displayIngredients();
 				System.out.println("\nError: Ingredient not found "
 						+ "in the user's list of ingredients. "
 						+ "Please try again.");
@@ -464,7 +513,7 @@ public class FoodFriend {
 	}
 	
 	/**
-	 * Searches for an ingredient in the ArrayList of user ingredients using the Linear Search Algorithm.
+	 * Searches for an ingredient in the ArrayList of user ingredients using a Linear Search Algorithm.
 	 * 
 	 * @param target the search term
 	 * @return the index value of the ingredient if it exists
@@ -501,7 +550,7 @@ public class FoodFriend {
 	}
 	
 	/**
-	 * Displays the user's pantry to the user.
+	 * Displays the user's pantry to the user with formatting.
 	 */
 	public static void displayPantry() {
 		try (BufferedReader reader = new BufferedReader(new FileReader("SaveFile.txt"))) {
@@ -543,8 +592,41 @@ public class FoodFriend {
 				System.out.printf("%-24s", dates[j]);
 			}
 			
-			System.out.println("\n----------------------------------------------------------------\n");
+			System.out.println("\n-------------------------------"
+					+ "---------------------------------\n");
 			i--;
+		}
+	}
+	
+	/**
+	 * Displays the user's ingredients without any formatting.
+	 */
+	public static void displayIngredients() {
+		try (BufferedReader reader = new BufferedReader(new FileReader("SaveFile.txt"))) {
+			String line;
+			ingredients.clear();
+			
+			while ((line = reader.readLine()) != null) {
+				Ingredient ingredient = new Ingredient(null, null);
+				String[] temp = line.split(",");
+				
+				ingredient.setName(temp[0]);
+				
+				if (!temp[1].equals("null")) {
+					ingredient.setExpirationDate(LocalDate.parse(temp[1], formatter));
+				}
+				
+				ingredients.add(ingredient);
+			}
+		} catch (IOException e) {
+			System.out.println("Error: Save file exists, but cannot be found.\n");
+		}
+		
+		System.out.println("Ingredients:");
+		
+		for (int i = 0; i< ingredients.size(); i++) {
+			System.out.println(ingredients.get(i).getName() + 
+					", " + ingredients.get(i).getExpirationDate());
 		}
 	}
 	

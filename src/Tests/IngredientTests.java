@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 /**
- * Tests for the Ingredient class.
+ * Test cases for the Ingredient class.
  */
 class IngredientTests {
 	
