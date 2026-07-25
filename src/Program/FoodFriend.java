@@ -74,12 +74,12 @@ public class FoodFriend {
 		int input = 0;
 		
 		while (true) {
-			System.out.println("Food Friend\n-----------------");
-			System.out.println("1. Generate Recipes\n"
-					+ "2. Manage Pantry\n"
-					+ "3. Exit\n"
+			System.out.println("Food Friend"
+					+ "\n-----------------"
+					+ "\n1. Generate Recipes"
+					+ "\n2. Manage Pantry"
+					+ "\n3. Exit\n"
 					+ "\nEnter Option Here:");
-			
 			try {
 				input = scanner.nextInt();
 				scanner.nextLine();
@@ -131,7 +131,6 @@ public class FoodFriend {
 		
 		if (saveFile.exists() && !ingredients.isEmpty()) {
 			while (true) {
-				boolean breakLoop = false;
 				System.out.println("What kind of recipe do you want?"
 						+ "\n1. Main Course"
 						+ "\n2. Dessert"
@@ -143,26 +142,50 @@ public class FoodFriend {
 				newPage();
 				switch (input) {
 				case "1": // Main Course
+					newPage();
+					while (true) {
+						System.out.println("What kind of main course?"
+								+ "\n1. Breakfast"
+								+ "\n2. Lunch"
+								+ "\n3. Dinner\n"
+								+ "\nEnter option here: ");
+						input = scanner.nextLine();
+						
+						newPage();
+						if (input.equals("1")) {
+							Spoonacular.getRecipes(ingredients, "Breakfast");
+							displayRecipes(scanner);
+							break;
+						} else if (input.equals("2")) {
+							Spoonacular.getRecipes(ingredients, "Lunch");
+							displayRecipes(scanner);
+							break;
+						} else if (input.equals("3")) {
+							Spoonacular.getRecipes(ingredients, "Dinner");
+							displayRecipes(scanner);
+							break;
+						} else {
+							System.out.println("Error: Input is not recognized. Please try again.\n");
+						}
+					}
+					
 					break;
 					
 				case "2": // Dessert
+					Spoonacular.getRecipes(ingredients, "Dessert");
+					displayRecipes(scanner);
 					break;
 					
 				case "3": // Snack
+					Spoonacular.getRecipes(ingredients, "Snack");
+					displayRecipes(scanner);
 					break;
 					
 				case "4": // Exit
-					breakLoop = true;
-					break;
+					return;
 					
 				default: // Unrecognized input
 					System.out.println("Error: Input is not recognized. Please try again.\n");
-					break;
-				}
-				
-				// Temporary solution for the exit option
-				// Subject to change
-				if (breakLoop) {
 					break;
 				}
 			}
@@ -170,6 +193,33 @@ public class FoodFriend {
 			System.out.println("Error: No ingredients found. "
 					+ "Recipes cannot be generated.");
 		}
+	}
+	
+	/**
+	 * Displays the generated recipes to the user.
+	 * 
+	 * @param scanner for user input
+	 */
+	public static void displayRecipes(Scanner scanner) {
+		newPage();
+		
+		System.out.println("Recipes Generated:"
+				+ "\n-----------------\n");
+		for (int i = 0; i < recipes.size(); i++) {
+			if (i+1 < recipes.size()) {
+				System.out.printf("-%-60s-%s\n", recipes.get(i), recipes.get(i+1));
+			} else {
+				System.out.println("-" + recipes.get(i));
+			}
+			
+			i++;
+			//System.out.println("-" + recipes.get(i));
+		}
+		
+		System.out.println("\nPress Enter to continue:");
+		scanner.nextLine();
+		recipes.clear();
+		newPage();
 	}
 	
 	/**
@@ -186,7 +236,6 @@ public class FoodFriend {
 			displayPantry();
 			
 			while (true) {
-				boolean breakLoop = false;
 				System.out.println("\nManage Pantry Options"
 						+ "\n-----------------------------"
 						+ "\n1. Add Ingredient"
@@ -211,18 +260,11 @@ public class FoodFriend {
 						break;
 					
 					case "4": // Exit
-						breakLoop = true;
-						break;
+						return;
 					
 					default: // Unrecognized input
 						System.out.println("Error: Input is not recognized. Please try again.");
 						break;
-				}
-				
-				// Temporary solution for the exit option
-				// Subject to change
-				if (breakLoop) {
-					break;
 				}
 				
 				displayPantry();
@@ -263,7 +305,7 @@ public class FoodFriend {
 							+ "(Say 'None' is there isn't one): ");
 					input = scanner.nextLine();
 					
-					if (!input.equals("none")) {
+					if (!input.toLowerCase().equals("none")) {
 						try {
 							date = LocalDate.parse(input, formatter);
 							
