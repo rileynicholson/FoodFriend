@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Spoonacular {
 	
 	private static final String key = gatherAPIKey();
-	private static final String baseURL = "https://api.spoonacular.com/recipes/findByIngredients";
+	private static final String baseURL = "https://api.spoonacular.com/recipes/complexSearch";
 	
 	/**
 	 * Gathers recipes that the user can make based on their ingredients.
@@ -28,36 +28,37 @@ public class Spoonacular {
 		String urlString, query = "";
 		HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 		
-		System.out.println(dish);
 		switch (dish) {
-		case "Breakfast": // Tested, works
-			query = "Breakfast recipes that can be made with any of the ingredients of ";
+		case "Breakfast":
+			dish = "breakfast";
 			break;
 			
-		case "Lunch": // Not tested
-			query = "Lunch recipes that can be made with any of the ingredients of ";
+		case "Lunch":
+			dish = "main%20course";
 			break;
 			
-		case "Dinner": // Not tested
-			query = "Dinner recipes that can be made with any of the ingredients of ";
+		case "Dinner":
+			dish = "main%20course";
 			break;
 			
-		case "Dessert": // Not tested
-			query = "Dessert recipes that can be made with any of the ingredients of ";
+		case "Dessert":
+			dish = "dessert";
 			break;
 			
-		case "Snack": // Not tested
-			query = "Simple snack recipes that can be made with any of the ingredients of ";
+		case "Snack":
+			dish = "snack";
 			break;
 		}
 		
 		for (int i = 0; i < ingredients.size(); i++) {
-			query += ingredients.get(i).getName() + ",";
+			query += ingredients.get(i).getName();
+			
+			if (i < ingredients.size() - 1) {
+				query += ",";
+			}
 		}
 		
-		query = query.replace(" ", "+");
-		
-		urlString = String.format("%s?ingredients=%s&number=50&ranking=1&ignorePantry=true&apiKey=%s", baseURL, query, key);
+		urlString = String.format("%s?includeIngredients=%s&number=50&ranking=1&ignorePantry=true&type=%s&apiKey=%s", baseURL, query, dish, key);
 		
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlString)).GET().build();
 		
@@ -102,6 +103,7 @@ public class Spoonacular {
 					temp = line.replace("\"title\":", "")
 							.replace("\"", "");
 					
+					FoodFriend.capitalize(temp);
 					FoodFriend.recipes.add(temp);
 				}
 				/*

@@ -57,7 +57,7 @@ public class FoodFriend {
 	 * Saves the ingredients that the user has in a .txt file.
 	 */
 	public static void saveFile() {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter("SaveFile.txt", false))) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter("." + File.separator +"SaveFile.txt", false))) {
 			for (int i = 0; i < ingredients.size(); i++) {
 				writer.write(ingredients.get(i).getName() + "," + ingredients.get(i).getExpirationDate() + "\n");
 			}
@@ -595,7 +595,7 @@ public class FoodFriend {
 	 * Displays the user's pantry to the user with formatting.
 	 */
 	public static void displayPantry() {
-		try (BufferedReader reader = new BufferedReader(new FileReader("SaveFile.txt"))) {
+		try (BufferedReader reader = new BufferedReader(new FileReader("." + File.separator + "SaveFile.txt"))) {
 			String line;
 			ingredients.clear();
 			
@@ -644,7 +644,7 @@ public class FoodFriend {
 	 * Displays the user's ingredients without any formatting.
 	 */
 	public static void displayIngredients() {
-		try (BufferedReader reader = new BufferedReader(new FileReader("SaveFile.txt"))) {
+		try (BufferedReader reader = new BufferedReader(new FileReader("." + File.separator + "SaveFile.txt"))) {
 			String line;
 			ingredients.clear();
 			
