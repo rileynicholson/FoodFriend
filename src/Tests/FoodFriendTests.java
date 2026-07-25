@@ -47,6 +47,25 @@ class FoodFriendTests {
 	}
 	
 	@Test
+	void testCapitalize_InputWithMultipleWordsLowercase() {
+		String testWords = "multiple words";
+		String newTestWords = FoodFriend.capitalize(testWords);
+		
+		assertNotEquals(testWords, newTestWords);
+		assertNotEquals(newTestWords, "multiple words");
+		assertEquals(newTestWords, "Multiple words");
+	}
+	
+	@Test
+	void testCapitalize_InputWithMultipleWordsUppercase() {
+		String testWords = "Multiple words";
+		String newTestWords = FoodFriend.capitalize(testWords);
+		
+		assertEquals(testWords, newTestWords);
+		assertEquals(testWords, "Multiple words");
+	}
+	
+	@Test
 	void testLinearSearch_WithNormalTerm() {
 		Ingredient ingredient1 = new Ingredient("Tomato", null);
 		
