@@ -4,6 +4,7 @@ FoodFriend! is a Java program that helps a user come up with recipes to make wit
 
 # How to Run FoodFriend!
 ## Prerequisites
+- **Git:** Required to clone the repository onto your computer. Can be downloaded from https://git-scm.com/install/windows.
 - **Java Development Kit:** I used Version 25 to make this project.
 - **Spoonacular API Key:** I did not want people to misuse my personal API Key, so I stored it in a hidden file local to my computer. As a result, you need an API Key from Spoonacular. It is really easy to obtain one and you can obtain it from https://spoonacular.com/food-api for free.
 
