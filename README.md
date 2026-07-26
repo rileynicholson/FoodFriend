@@ -22,13 +22,13 @@ git clone https://github.com/rileynicholson/FoodFriend.git
 7. Expand the project, navigate to `src`, then `Program`, then `Main.java`.
 8. Run the file!
 
+---
+
 ### Method 2: Using Command Prompt
-2. Open Command Prompt and navigate to the project using 'cd'.
-- If you did not change your directory before cloning, you should be able to use:
+2. Open Command Prompt and navigate to the project using 'cd'. If you did not change your directory before cloning, you should be able to use:
 ```bash
 cd FoodFriend
 ```
-
 3. Make sure you are in `FoodFriend\`. Compile the files into the bin directory using:
 ```bash
 javac -d bin src\Program\*.java src\Tests\*.java
