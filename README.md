@@ -8,14 +8,14 @@ FoodFriend! is a Java program that helps a user come up with recipes to make wit
 - **Spoonacular API Key:** I did not want people to misuse my personal API Key, so I stored it in a hidden file local to my computer. As a result, you need an API Key from Spoonacular. It is really easy to obtain one and you can obtain it from https://spoonacular.com/food-api for free.
 
 ## Instructions
-### 1. Clone the repository onto your computer
+1. Clone the repository onto your computer
 ```bash
 git clone https://github.com/rileynicholson/FoodFriend.git
 ```
 
 ### Method 1: Using Eclipse IDE
 2. Open Eclipse.
-3. Navigate to File, then Import.
+3. Navigate to File in the top right corner, then Import.
 4. Select General, then Existing Projects into Workspace, and click Next.
 5. Choose Select root directory, click Browse, and locate the clone location.
 6. Click Finish.
@@ -28,14 +28,16 @@ git clone https://github.com/rileynicholson/FoodFriend.git
 ```bash
 cd FoodFriend
 ```
+
 3. Make sure you are in `FoodFriend\`. Compile the files into the bin directory using:
 ```bash
 javac -d bin src\Program\*.java src\Tests\*.java
 ```
-- If you run into problems with the command above, use:
+If you run into problems with the command above, use:
 ```bash
 javac -d bin src\Program\*.java
 ```
+
 4. Run the application using:
 ```bash
 java -cp bin Program.Main
