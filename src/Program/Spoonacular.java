@@ -15,6 +15,12 @@ import java.util.ArrayList;
 
 public class Spoonacular {
 	
+	// This is for those who want to run the program and have their own API key.
+	// Add your own key in the quotation marks in the commented line of code below.
+	// Then comment out the original line of code that sets the key value with the "gatherAPIKey()" method.
+	//
+	// private static final String key = "";
+	
 	private static final String key = gatherAPIKey();
 	private static final String baseURL = "https://api.spoonacular.com/recipes/complexSearch";
 	
@@ -106,24 +112,6 @@ public class Spoonacular {
 					FoodFriend.capitalize(temp);
 					FoodFriend.recipes.add(temp);
 				}
-				/*
-				 * Keeping this here just in case it is needed in the future:
-				 * 
-				 * else if (!line.contains("\"id\"") && !line.contains("\"image\"") 
-						&& !line.contains("\"imageType\"") && !line.contains("]") && !line.contains("[") 
-						&& !line.contains("\"usedIngredientCount\"") && !line.contains("\"missedIngredientCount\"")
-						&& !line.contains("\"missedIngredients\"") && !line.contains("\"amount\"") 
-						&& !line.contains("\"unit\"") && !line.contains("\"unitLong\"") && !line.contains("\"unitShort\"")
-						&& !line.contains(")
-						&& !line.isEmpty()) {
-					temp = line.replace("\"", "");
-					
-					temp = FoodFriend.recipes.getLast() + temp;
-					FoodFriend.recipes.removeLast();
-					
-					FoodFriend.recipes.add(temp);
-				}
-				 */
 			}
 		} catch (IOException e) {
 			// Temporary Error condition
@@ -136,11 +124,6 @@ public class Spoonacular {
 			
 			System.exit(-1);
 		}
-		/*
-		for (int i = 0; i < FoodFriend.recipes.size(); i++) {
-			System.out.println(FoodFriend.recipes.get(i) + "\n");
-		}
-		*/
 	}
 	
 	/**
@@ -160,7 +143,8 @@ public class Spoonacular {
 			// Work in progress (WIP)
 			FoodFriend.newPage();
 			e.printStackTrace();
-			System.out.println("Error: Recipes could not be gathered from recipes file, "
+			System.out.println("Error: API Key could not be gathered, "
+					+ "please go into the Spoonacular class and add your own Spoonacular API Key or please try again "
 					+ "program ending..");
 			
 			System.exit(-1);
