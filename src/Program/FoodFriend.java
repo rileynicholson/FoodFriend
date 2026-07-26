@@ -152,15 +152,15 @@ public class FoodFriend {
 						input = scanner.nextLine();
 						
 						newPage();
-						if (input.equals("1")) {
+						if (input.equals("1")) { // Breakfast
 							Spoonacular.getRecipes(ingredients, "Breakfast");
 							displayRecipes(scanner);
 							break;
-						} else if (input.equals("2")) {
+						} else if (input.equals("2")) { // Lunch
 							Spoonacular.getRecipes(ingredients, "Lunch");
 							displayRecipes(scanner);
 							break;
-						} else if (input.equals("3")) {
+						} else if (input.equals("3")) { // Dinner
 							Spoonacular.getRecipes(ingredients, "Dinner");
 							displayRecipes(scanner);
 							break;
@@ -295,67 +295,67 @@ public class FoodFriend {
 			
 			if (input.equals("stop")) {
 				newPage();
-				break;
-			} else {
-				Ingredient ingredient = new Ingredient(input, null);
-				newPage();
+				return;
+			}
+			
+			Ingredient ingredient = new Ingredient(input, null);
+			newPage();
+			
+			while (true) {
+				System.out.println("Enter the expiration date of the ingredient in Year-Month-Day format "
+						+ "(Say 'None' is there isn't one): ");
+				input = scanner.nextLine();
 				
-				while (true) {
-					System.out.println("Enter the expiration date of the ingredient in Year-Month-Day format "
-							+ "(Say 'None' is there isn't one): ");
-					input = scanner.nextLine();
-					
-					if (!input.toLowerCase().equals("none")) {
-						try {
-							date = LocalDate.parse(input, formatter);
-							
-							if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now())) {
-								System.out.println("\nError: The entered date is already expired, "
-										+ "please try again.\n");
-							} else {
-								break;
-							}
-						} catch (DateTimeParseException e) {
-							System.out.println("\nError: Date input is invalid. Please try again.\n");
+				if (!input.toLowerCase().equals("none")) {
+					try {
+						date = LocalDate.parse(input, formatter);
+						
+						if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now())) {
+							System.out.println("\nError: The entered date is already expired, "
+									+ "please try again.\n");
+						} else {
+							break;
 						}
-					} else {
-						date = null;
-						break;
+					} catch (DateTimeParseException e) {
+						System.out.println("\nError: Date input is invalid. Please try again.\n");
 					}
+				} else {
+					date = null;
+					break;
 				}
+			}
+			
+			newPage();
+			ingredient.setExpirationDate(date);
+			
+			while (true) {
+				System.out.println("Is the given information entered correctly?\n"
+						+ "\"" + ingredient.getName() + "\"" + ", " + "\"" + ingredient.getExpirationDate() + "\""
+						+ "\n1. Yes"
+						+ "\n2. No"
+						+ "\nEnter option here: ");
 				
-				newPage();
-				ingredient.setExpirationDate(date);
+				input = scanner.nextLine();
 				
-				while (true) {
-					System.out.println("Is the given information entered correctly?\n"
-							+ "\"" + ingredient.getName() + "\"" + ", " + "\"" + ingredient.getExpirationDate() + "\""
-							+ "\n1. Yes"
-							+ "\n2. No"
-							+ "\nEnter option here: ");
+				if (input.equals("1")) {
+					ingredient.setName(capitalize(ingredient.getName()));
+					ingredients.add(ingredient);
 					
-					input = scanner.nextLine();
+					saveFile();
+					newPage();
 					
-					if (input.equals("1")) {
-						ingredient.setName(capitalize(ingredient.getName()));
-						ingredients.add(ingredient);
-						
-						saveFile();
-						newPage();
-						
-						System.out.println(ingredient.getName() + " added to pantry!\n");
-						break;
-					} else if (input.equals("2")) {
-						ingredient.setName(capitalize(ingredient.getName()));
-						
-						newPage();
-						
-						System.out.println(ingredient.getName() + " removed!\n");
-						break;
-					} else {
-						newPage();
-						System.out.println("\nError: Input not recognized. Please try again.\n");
-					}
+					System.out.println(ingredient.getName() + " added to pantry!\n");
+					break;
+				} else if (input.equals("2")) {
+					ingredient.setName(capitalize(ingredient.getName()));
+					
+					newPage();
+					
+					System.out.println(ingredient.getName() + " removed!\n");
+					break;
+				} else {
+					newPage();
+					System.out.println("\nError: Input not recognized. Please try again.\n");
 				}
 			}
 		}
@@ -378,7 +378,8 @@ public class FoodFriend {
 			input = scanner.nextLine();
 			
 			if (input.toLowerCase().equals("exit")) {
-				break;
+				newPage();
+				return;
 			}
 			
 			newPage();
@@ -395,28 +396,78 @@ public class FoodFriend {
 			}
 		}
 		
-		if (!input.toLowerCase().equals("exit")) {
-			while (true) {
-				System.out.println("How would you like to modify this ingredient? "
-						+ "\n\"" + ingredients.get(index).getName() + "\"" + ", " + "\"" + ingredients.get(index).getExpirationDate() + "\""
-						+ "\n1. Name"
-						+ "\n2. Expiration Date"
-						+ "\n3. Cancel"
-						+ "\nEnter option here: ");
-				input = scanner.nextLine();
+		while (true) {
+			System.out.println("How would you like to modify this ingredient? "
+					+ "\n\"" + ingredients.get(index).getName() + "\"" + ", " + "\"" + ingredients.get(index).getExpirationDate() + "\""
+					+ "\n1. Name"
+					+ "\n2. Expiration Date"
+					+ "\n3. Cancel"
+					+ "\nEnter option here: ");
+			input = scanner.nextLine();
+			
+			newPage();
+			
+			switch (input) {
+			case "1": // Name
+				while (true) {
+					System.out.println("Replacing \"" + ingredients.get(index).getName() + "\".."
+							+ "\nEnter the new name here: ");
+					temp = scanner.nextLine();
+					
+					newPage();
+					
+					System.out.println("New name: "
+							+ "\"" + temp + "\""
+							+ "\nIs this the correct new name of the ingredient?"
+							+ "\n1. Yes"
+							+ "\n2. No"
+							+ "\nEnter option: ");
+					input = scanner.nextLine();
+					
+					newPage();
+					if (input.equals("1")) {
+						ingredients.get(index).setName(temp);
+						saveFile();
+						break;
+					} else if (input.equals("2")) {
+						continue;
+					} else {
+						System.out.println("Error: Input is not recognized, "
+								+ "please try again.");
+					}
+				}
+				break;
 				
-				newPage();
-				if (input.equals("1")) {
-					while (true) {
-						System.out.println("Replacing \"" + ingredients.get(index).getName() + "\".."
-								+ "\nEnter the new name here: ");
-						temp = scanner.nextLine();
-						
+			case "2": // Expiration Date
+				while (true) {
+					System.out.println("Replacing \"" + ingredients.get(index).getExpirationDate() + "\".."
+							+ "\nEnter the new expiration date here (Year-Month-Day format): ");
+					temp = scanner.nextLine();
+					
+					try {
+						if (LocalDate.parse(temp, formatter).isAfter(LocalDate.now())) {
+							dateWorks = true;
+						} else {
+							newPage();
+							
+							System.out.println("Error: Date entered is expired, "
+									+ "please try again.\n");
+							dateWorks = false;
+						}
+					} catch (Exception e) {
 						newPage();
 						
-						System.out.println("New name: "
+						System.out.println("Error: Input is not an actual date, "
+								+ "please try again.\n");
+						dateWorks = false;
+					}
+					
+					if (dateWorks) {
+						newPage();
+						
+						System.out.println("New expiration date: "
 								+ "\"" + temp + "\""
-								+ "\nIs this the correct new name of the ingredient?"
+								+ "\nIs this the correct new expiration date of the ingredient?"
 								+ "\n1. Yes"
 								+ "\n2. No"
 								+ "\nEnter option: ");
@@ -424,71 +475,27 @@ public class FoodFriend {
 						
 						newPage();
 						if (input.equals("1")) {
-							ingredients.get(index).setName(temp);
+							ingredients.get(index).setExpirationDate(LocalDate.parse(temp, formatter));
 							saveFile();
 							break;
 						} else if (input.equals("2")) {
 							continue;
 						} else {
 							System.out.println("Error: Input is not recognized, "
-									+ "please try again.");
-						}
-					}
-				} else if (input.equals("2")) {
-					while (true) {
-						System.out.println("Replacing \"" + ingredients.get(index).getExpirationDate() + "\".."
-								+ "\nEnter the new expiration date here (Year-Month-Day format): ");
-						temp = scanner.nextLine();
-						
-						try {
-							if (LocalDate.parse(temp, formatter).isAfter(LocalDate.now())) {
-								dateWorks = true;
-							} else {
-								newPage();
-								
-								System.out.println("Error: Input is expired, "
-										+ "please try again.\n");
-								dateWorks = false;
-							}
-						} catch (Exception e) {
-							newPage();
-							
-							System.out.println("Error: Input is not an actual date, "
 									+ "please try again.\n");
-							dateWorks = false;
-						}
-						
-						if (dateWorks) {
-							newPage();
-							
-							System.out.println("New expiration date: "
-									+ "\"" + temp + "\""
-									+ "\nIs this the correct new expiration date of the ingredient?"
-									+ "\n1. Yes"
-									+ "\n2. No"
-									+ "\nEnter option: ");
-							input = scanner.nextLine();
-							
-							newPage();
-							if (input.equals("1")) {
-								ingredients.get(index).setExpirationDate(LocalDate.parse(temp, formatter));
-								saveFile();
-								break;
-							} else if (input.equals("2")) {
-								continue;
-							} else {
-								System.out.println("Error: Input is not recognized, "
-										+ "please try again.\n");
-							}
 						}
 					}
-				} else if (input.equals("3")) {
-					break;
-				} else {
-					newPage();
-					System.out.println("Error: Input not recognized, "
-							+ "please try again.\n");
 				}
+				break;
+				
+			case "3": // Cancel
+				return;
+				
+			default: // Input not recognized
+				newPage();
+				System.out.println("Error: Input not recognized, "
+						+ "please try again.\n");
+				break;
 			}
 		}
 	}
@@ -509,7 +516,8 @@ public class FoodFriend {
 			input = scanner.nextLine();
 			
 			if (input.toLowerCase().equals("exit")) {
-				break;
+				newPage();
+				return;
 			}
 			
 			newPage();
@@ -526,30 +534,28 @@ public class FoodFriend {
 			}
 		}
 		
-		if (!input.toLowerCase().equals("exit")) {
-			while (true) {
-				System.out.println("Are you sure you want to remove this ingredient? "
-						+ "\n\"" + ingredients.get(index).getName() + "\"" + ", " + "\"" + ingredients.get(index).getExpirationDate() + "\""
-						+ "\n1. Yes"
-						+ "\n2. No"
-						+ "\nEnter option here: ");
-				input = scanner.nextLine();
+		while (true) {
+			System.out.println("Are you sure you want to remove this ingredient? "
+					+ "\n\"" + ingredients.get(index).getName() + "\"" + ", " + "\"" + ingredients.get(index).getExpirationDate() + "\""
+					+ "\n1. Yes"
+					+ "\n2. No"
+					+ "\nEnter option here: ");
+			input = scanner.nextLine();
+			
+			if (input.equals("1")) {
+				ingredients.remove(index);
 				
-				if (input.equals("1")) {
-					ingredients.remove(index);
-					
-					saveFile();
-					
-					newPage();
-					break;
-				} else if (input.equals("2")) {
-					newPage();
-					break;
-				} else {
-					newPage();
-					System.out.println("Error: Input not recognized, "
-							+ "please try again.");
-				}
+				saveFile();
+				
+				newPage();
+				break;
+			} else if (input.equals("2")) {
+				newPage();
+				break;
+			} else {
+				newPage();
+				System.out.println("Error: Input not recognized, "
+						+ "please try again.");
 			}
 		}
 	}
