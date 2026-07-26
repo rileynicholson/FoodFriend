@@ -8,27 +8,27 @@ FoodFriend! is a Java program that helps a user come up with recipes to make wit
 - **Spoonacular API Key:** I did not want people to misuse my personal API Key, so I stored it in a hidden file local to my computer. As a result, you need an API Key from Spoonacular. It is really easy to obtain one and you can obtain it from https://spoonacular.com/food-api for free.
 
 ## Instructions
-**1. Clone the repository onto your computer**
+### 1. Clone the repository onto your computer
 ```bash
 git clone https://github.com/rileynicholson/FoodFriend.git
 ```
 
-**Method 1: Using Eclipse IDE**
-1. Open Eclipse.
-2. Navigate to File, then Import.
-3. Select General, then Existing Projects into Workspace, and click Next.
-4. Choose Select root directory, click Browse, and locate the clone location.
-5. Click Finish.
-6. Expand the project, navigate to `src`, then `Program`, then `Main.java`.
-7. Run the file!
+### Method 1: Using Eclipse IDE
+2. Open Eclipse.
+3. Navigate to File, then Import.
+4. Select General, then Existing Projects into Workspace, and click Next.
+5. Choose Select root directory, click Browse, and locate the clone location.
+6. Click Finish.
+7. Expand the project, navigate to `src`, then `Program`, then `Main.java`.
+8. Run the file!
 
-**Method 2: Using Command Prompt**
-1. Open Command Prompt and navigate to the project using 'cd'.
+### Method 2: Using Command Prompt
+2. Open Command Prompt and navigate to the project using 'cd'.
 - If you did not change your directory before cloning, you should be able to use:
 ```bash
 cd FoodFriend
 ```
-2. Make sure you are in `FoodFriend\`. Compile the files into the bin directory using:
+3. Make sure you are in `FoodFriend\`. Compile the files into the bin directory using:
 ```bash
 javac -d bin src\Program\*.java src\Tests\*.java
 ```
@@ -36,7 +36,7 @@ javac -d bin src\Program\*.java src\Tests\*.java
 ```bash
 javac -d bin src\Program\*.java
 ```
-3. Run the application using:
+4. Run the application using:
 ```bash
 java -cp bin Program.Main
 ```
