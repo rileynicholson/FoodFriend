@@ -19,7 +19,7 @@ git clone https://github.com/rileynicholson/FoodFriend.git
 3. Select General, then Existing Projects into Workspace, and click Next.
 4. Choose Select root directory, click Browse, and locate the clone location.
 5. Click Finish.
-6. Expand the project, navigate to "src", then "Program", then "Main.java".
+6. Expand the project, navigate to `src`, then `Program`, then `Main.java`.
 7. Run the file!
 
 **Method 2: Using Command Prompt**
@@ -34,7 +34,7 @@ command
 ```
 
 ## Before Running
-- Make sure you add your API Key into the project. Navigate to src/Program/Spoonacular.java and follow the instructions in lines 18-20
+- Make sure you add your API Key into the project. Navigate to `src/Program/Spoonacular.java` and follow the instructions in lines 18-20.
 
 # Latest Updates to FoodFriend!
 - Added a working menu.
