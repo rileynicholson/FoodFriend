@@ -4,14 +4,14 @@ FoodFriend! is a Java program that helps a user come up with recipes to make wit
 
 # How to Run FoodFriend!
 ## Prerequisites
--**Java Development Kit:** I used Version 25 to make this project.
--**Spoonacular API Key:** I did not want people to misuse my personal API Key, so I stored it in a hidden file local to my computer. As a result, you need an API Key from Spoonacular. It is really easy to obtain one and you can obtain it from https://spoonacular.com/food-api for free.
+- **Java Development Kit:** I used Version 25 to make this project.
+- **Spoonacular API Key:** I did not want people to misuse my personal API Key, so I stored it in a hidden file local to my computer. As a result, you need an API Key from Spoonacular. It is really easy to obtain one and you can obtain it from https://spoonacular.com/food-api for free.
 
 ## Instructions
 **1. Clone the repository onto your computer**
-'''bash
+```bash
 git clone https://github.com/rileynicholson/FoodFriend.git
-'''
+```
 
 **Method 1: Using Eclipse IDE**
 1. Open Eclipse.
@@ -25,16 +25,16 @@ git clone https://github.com/rileynicholson/FoodFriend.git
 **Method 2: Using Command Prompt**
 1. Open Command Prompt and navigate to the project using 'cd'.
 2. Compile the files into the bin directory using:
-'''bash
+```bash
 command
-'''
+```
 3. Run the application using:
-'''bash
+```bash
 command
-'''
+```
 
 ## Before Running
--Make sure you add your API Key into the project. Navigate to src/Program/Spoonacular.java and follow the instructions in lines 18-20
+- Make sure you add your API Key into the project. Navigate to src/Program/Spoonacular.java and follow the instructions in lines 18-20
 
 # Latest Updates to FoodFriend!
 - Added a working menu.
