@@ -24,13 +24,21 @@ git clone https://github.com/rileynicholson/FoodFriend.git
 
 **Method 2: Using Command Prompt**
 1. Open Command Prompt and navigate to the project using 'cd'.
-2. Compile the files into the bin directory using:
+- If you did not change your directory before cloning, you should be able to use:
 ```bash
-command
+cd FoodFriend
+```
+2. Make sure you are in `FoodFriend\`. Compile the files into the bin directory using:
+```bash
+javac -d bin src\Program\*.java src\Tests\*.java
+```
+- If you run into problems with the command above, use:
+```bash
+javac -d bin src\Program\*.java
 ```
 3. Run the application using:
 ```bash
-command
+java -cp bin Program.Main
 ```
 
 ## Before Running
