@@ -12,6 +12,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Spoonacular {
 	
@@ -30,7 +31,7 @@ public class Spoonacular {
 	 * @param ingredients the users have in their pantry
 	 * @param dish what type of food they want to make (main course, snack, etc)
 	 */
-	public static void getRecipes(ArrayList<Ingredient> ingredients, String dish) {
+	public static void getRecipes(ArrayList<Ingredient> ingredients, String dish, Scanner scanner) {
 		String urlString, query = "";
 		HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 		
@@ -82,25 +83,23 @@ public class Spoonacular {
 					e.printStackTrace();
 				}
 				
-				storeRecipes();
+				storeRecipes(scanner);
 			} else {
 				System.out.println("Request failed. Status code: " 
 						+ response.statusCode() + " " + response.body());
 			}
 		} catch (Exception e) {
+			// Work in progress (WIP)
 			FoodFriend.newPage();
-			e.printStackTrace();
-			System.out.println("Error: Recipes could not be gathered from API, "
-					+ "program ending..");
-			
-			System.exit(-1);
+			System.err.println("Error: Recipes could not be gathered from API.");
+			return;
 		}
 	}
 	
 	/**
 	 * Stores the recipes generated in ArrayList.
 	 */
-	public static void storeRecipes() {
+	public static void storeRecipes(Scanner scanner) {
 		try (BufferedReader reader = new BufferedReader(new FileReader("recipes.json"))) {
 			String line, temp;
 			
@@ -113,16 +112,13 @@ public class Spoonacular {
 					FoodFriend.recipes.add(temp);
 				}
 			}
+			
+			FoodFriend.displayRecipes(scanner);
 		} catch (IOException e) {
-			// Temporary Error condition
-			// Subject to change
 			// Work in progress (WIP)
 			FoodFriend.newPage();
-			e.printStackTrace();
-			System.out.println("Error: Recipes could not be gathered from recipes file, "
-					+ "program ending..");
-			
-			System.exit(-1);
+			System.err.println("Error: Recipes could not be gathered from recipes file.");
+			return;
 		}
 	}
 	
@@ -138,16 +134,11 @@ public class Spoonacular {
 			String[] temp = reader.readLine().split("=");
 			API = temp[1];
 		} catch (IOException e) {
-			// Temporary Error condition
-			// Subject to change
 			// Work in progress (WIP)
 			FoodFriend.newPage();
-			e.printStackTrace();
-			System.out.println("Error: API Key could not be gathered, "
-					+ "please go into the Spoonacular class and add your own Spoonacular API Key or please try again "
-					+ "program ending..");
-			
-			System.exit(-1);
+			System.err.println("Error: API Key could not be gathered, "
+					+ "please go into the Spoonacular class "
+					+ "and add your own Spoonacular API Key or please try again.");
 		}
 		
 		return API;

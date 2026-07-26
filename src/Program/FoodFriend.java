@@ -49,7 +49,8 @@ public class FoodFriend {
 				ingredients.add(ingredient);
 			}
 		} catch (IOException e) {
-			System.out.println("ERROR: Save File exists, but is not found. No data has been loaded.\n");
+			System.err.println("Error: Save File exists, but is not found. No data has been loaded.\n");
+			return;
 		}
 	}
 	
@@ -62,7 +63,8 @@ public class FoodFriend {
 				writer.write(ingredients.get(i).getName() + "," + ingredients.get(i).getExpirationDate() + "\n");
 			}
 		} catch (IOException e) {
-			System.out.println("ERROR: Save file is not able to save. No data is saved.\n");
+			System.err.println("Error: Save file is not able to save. No data is saved.\n");
+			return;
 		}
 	}
 	
@@ -71,7 +73,7 @@ public class FoodFriend {
 	 */
 	public static void menu() {
 		Scanner scanner = new Scanner(System.in);
-		int input = 0;
+		String input;
 		
 		while (true) {
 			System.out.println("Food Friend"
@@ -80,42 +82,36 @@ public class FoodFriend {
 					+ "\n2. Manage Pantry"
 					+ "\n3. Exit\n"
 					+ "\nEnter Option Here:");
-			try {
-				input = scanner.nextInt();
-				scanner.nextLine();
+			input = scanner.nextLine();
+			
+			newPage();
+			switch (input) {
+				case "1": // Generate Recipes
+					File saveFile = new File("SaveFile.txt");
 				
-				newPage();
-				switch (input) {
-					case 1: // Generate Recipes
-						File saveFile = new File("SaveFile.txt");
-					
-						if (saveFile.exists() || !ingredients.isEmpty()) {
-							generateRecipes(scanner);
-						} else {
-							System.out.println("Error: No ingredients found in the Pantry. Recipes cannot be generated.");
-						}
-						break;
+					if (saveFile.exists() || !ingredients.isEmpty()) {
+						generateRecipes(scanner);
+					} else {
+						System.out.println("Error: No ingredients found in the Pantry. Recipes cannot be generated.");
+					}
+					break;
+			
+				case "2": // Manage Pantry
+					managePantry(scanner);
+					break;
 				
-					case 2: // Manage Pantry
-						managePantry(scanner);
-						break;
-					
-					case 3: // Exit
-						System.out.println("Exiting the program, thank you for using!");
-						scanner.close();
-						System.exit(1);
-						break;
-					
-					default: // Unrecognized input
-						System.out.println("Error: Input is not recognized. Please try again.");
-						break;
-				}
+				case "3": // Exit
+					System.out.println("Exiting the program, thank you for using!");
+					scanner.close();
+					System.exit(1);
+					break;
 				
-				System.out.println();
-			} catch (Exception e) {
-				newPage();
-				System.out.println("Error: Input is not valid.\n");
+				default: // Unrecognized input
+					System.out.println("Error: Input is not recognized. Please try again.");
+					break;
 			}
+			
+			System.out.println();
 		}
 	}
 	
@@ -153,16 +149,16 @@ public class FoodFriend {
 						
 						newPage();
 						if (input.equals("1")) { // Breakfast
-							Spoonacular.getRecipes(ingredients, "Breakfast");
-							displayRecipes(scanner);
+							Spoonacular.getRecipes(ingredients, "Breakfast", scanner);
+							//displayRecipes(scanner);
 							break;
 						} else if (input.equals("2")) { // Lunch
-							Spoonacular.getRecipes(ingredients, "Lunch");
-							displayRecipes(scanner);
+							Spoonacular.getRecipes(ingredients, "Lunch", scanner);
+							//displayRecipes(scanner);
 							break;
 						} else if (input.equals("3")) { // Dinner
-							Spoonacular.getRecipes(ingredients, "Dinner");
-							displayRecipes(scanner);
+							Spoonacular.getRecipes(ingredients, "Dinner", scanner);
+							//displayRecipes(scanner);
 							break;
 						} else {
 							System.out.println("Error: Input is not recognized. Please try again.\n");
@@ -172,13 +168,13 @@ public class FoodFriend {
 					break;
 					
 				case "2": // Dessert
-					Spoonacular.getRecipes(ingredients, "Dessert");
-					displayRecipes(scanner);
+					Spoonacular.getRecipes(ingredients, "Dessert", scanner);
+					//displayRecipes(scanner);
 					break;
 					
 				case "3": // Snack
-					Spoonacular.getRecipes(ingredients, "Snack");
-					displayRecipes(scanner);
+					Spoonacular.getRecipes(ingredients, "Snack", scanner);
+					//displayRecipes(scanner);
 					break;
 					
 				case "4": // Exit
@@ -213,7 +209,6 @@ public class FoodFriend {
 			}
 			
 			i++;
-			//System.out.println("-" + recipes.get(i));
 		}
 		
 		System.out.println("\nPress Enter to continue:");
@@ -618,7 +613,8 @@ public class FoodFriend {
 				ingredients.add(ingredient);
 			}
 		} catch (IOException e) {
-			System.out.println("Error: Save file exists, but cannot be found.\n");
+			System.err.println("Error: Save file exists, but cannot be found.");
+			return;
 		}
 		
 		System.out.println("Pantry:"
@@ -667,9 +663,9 @@ public class FoodFriend {
 				ingredients.add(ingredient);
 			}
 		} catch (IOException e) {
-			System.out.println("Error: Save file exists, but cannot be found.\n");
+			System.err.println("Error: Save file exists, but cannot be found.");
+			return;
 		}
-		
 		System.out.println("Ingredients:");
 		
 		for (int i = 0; i< ingredients.size(); i++) {
