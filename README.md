@@ -34,7 +34,7 @@ cd FoodFriend
 ```bash
 javac -d bin src\Program\*.java src\Tests\*.java
 ```
-    If you run into problems with the command above, use:
+&emsp; If you run into problems with the command above, use:
 ```bash
 javac -d bin src\Program\*.java
 ```
