@@ -150,15 +150,12 @@ public class FoodFriend {
 						newPage();
 						if (input.equals("1")) { // Breakfast
 							Spoonacular.getRecipes(ingredients, "Breakfast", scanner);
-							//displayRecipes(scanner);
 							break;
 						} else if (input.equals("2")) { // Lunch
 							Spoonacular.getRecipes(ingredients, "Lunch", scanner);
-							//displayRecipes(scanner);
 							break;
 						} else if (input.equals("3")) { // Dinner
 							Spoonacular.getRecipes(ingredients, "Dinner", scanner);
-							//displayRecipes(scanner);
 							break;
 						} else {
 							System.out.println("Error: Input is not recognized. Please try again.\n");
@@ -169,12 +166,10 @@ public class FoodFriend {
 					
 				case "2": // Dessert
 					Spoonacular.getRecipes(ingredients, "Dessert", scanner);
-					//displayRecipes(scanner);
 					break;
 					
 				case "3": // Snack
 					Spoonacular.getRecipes(ingredients, "Snack", scanner);
-					//displayRecipes(scanner);
 					break;
 					
 				case "4": // Exit
@@ -621,7 +616,6 @@ public class FoodFriend {
 				+ "\n------------\n");
 		for (int i = 0; i < ingredients.size(); i++) {
 			int ingredientsOnRow = 0;
-			//LocalDate[] dates = new LocalDate[3];
 			LocalDate[] dates = {null, null, null};
 			
 			while (ingredientsOnRow < 3 && i < ingredients.size()) {
