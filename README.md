@@ -26,7 +26,7 @@ git clone https://github.com/rileynicholson/FoodFriend.git
 ---
 
 ### Method 2: Using Command Prompt
-2. Open Command Prompt and navigate to the project using 'cd'. If you did not change your directory before cloning, you should be able to use:
+2. Open Command Prompt and navigate to the project using `cd`. If you did not change your directory before cloning, you should be able to use:
 ```bash
 cd FoodFriend
 ```
@@ -34,7 +34,7 @@ cd FoodFriend
 ```bash
 javac -d bin src\Program\*.java src\Tests\*.java
 ```
-If you run into problems with the command above, use:
+    If you run into problems with the command above, use:
 ```bash
 javac -d bin src\Program\*.java
 ```
