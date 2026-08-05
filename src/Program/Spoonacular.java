@@ -32,8 +32,8 @@ public class Spoonacular {
 	 * @param dish what type of food they want to make (main course, snack, etc)
 	 */
 	public static void getRecipes(ArrayList<Ingredient> ingredients, String dish, Scanner scanner) {
-		String urlString, query = "";
 		HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+		String query = "";
 		
 		switch (dish) {
 		case "Breakfast":
@@ -65,7 +65,7 @@ public class Spoonacular {
 			}
 		}
 		
-		urlString = String.format("%s?includeIngredients=%s&number=50&ranking=1&ignorePantry=true&type=%s&apiKey=%s", baseURL, query, dish, key);
+		String urlString = String.format("%s?includeIngredients=%s&number=50&ranking=1&ignorePantry=true&type=%s&apiKey=%s", baseURL, query, dish, key);
 		
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlString)).GET().build();
 		
@@ -101,11 +101,11 @@ public class Spoonacular {
 	 */
 	public static void storeRecipes(Scanner scanner) {
 		try (BufferedReader reader = new BufferedReader(new FileReader("recipes.json"))) {
-			String line, temp;
+			String line;
 			
 			while ((line = reader.readLine()) != null) {
 				if (line.contains("title")) {
-					temp = line.replace("\"title\":", "")
+					String temp = line.replace("\"title\":", "")
 							.replace("\"", "");
 					
 					FoodFriend.capitalize(temp);

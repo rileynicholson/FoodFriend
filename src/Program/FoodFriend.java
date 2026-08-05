@@ -73,7 +73,6 @@ public class FoodFriend {
 	 */
 	public static void menu() {
 		Scanner scanner = new Scanner(System.in);
-		String input;
 		
 		while (true) {
 			System.out.println("Food Friend"
@@ -82,7 +81,7 @@ public class FoodFriend {
 					+ "\n2. Manage Pantry"
 					+ "\n3. Exit\n"
 					+ "\nEnter Option Here:");
-			input = scanner.nextLine();
+			String input = scanner.nextLine();
 			
 			newPage();
 			switch (input) {
@@ -121,10 +120,9 @@ public class FoodFriend {
 	 * @param scanner for user input
 	 */
 	public static void generateRecipes(Scanner scanner) {
-		newPage();
 		File saveFile = new File("SaveFile.txt");
-		String input;
 		
+		newPage();
 		if (saveFile.exists() && !ingredients.isEmpty()) {
 			while (true) {
 				System.out.println("What kind of recipe do you want?"
@@ -133,7 +131,7 @@ public class FoodFriend {
 						+ "\n3. Snack"
 						+ "\n4. Exit\n"
 						+ "\nEnter option here: ");
-				input = scanner.nextLine();
+				String input = scanner.nextLine();
 				
 				newPage();
 				switch (input) {
@@ -220,7 +218,6 @@ public class FoodFriend {
 	public static void managePantry(Scanner scanner) {
 		newPage();
 		File saveFile = new File("SaveFile.txt");
-		String input;
 		
 		if (saveFile.exists() && !ingredients.isEmpty()) {
 			displayPantry();
@@ -233,7 +230,7 @@ public class FoodFriend {
 						+ "\n3. Remove Ingredient"
 						+ "\n4. Exit\n"
 						+ "\nEnter Option Here:");
-				input = scanner.nextLine();
+				String input = scanner.nextLine();
 				
 				newPage();
 				switch (input) {
@@ -275,13 +272,10 @@ public class FoodFriend {
 	 * @param scanner for user input
 	 */
 	public static void addIngredientsToPantry(Scanner scanner) {
-		String input;
-		LocalDate date;
-		
 		while (true) {
 			System.out.println("Enter the name of the ingredient "
 					+ "(Say 'Stop' to stop inputting ingredients):");
-			input = scanner.nextLine().toLowerCase();
+			String input = scanner.nextLine().toLowerCase();
 			
 			if (input.equals("stop")) {
 				newPage();
@@ -298,33 +292,30 @@ public class FoodFriend {
 				
 				if (!input.toLowerCase().equals("none")) {
 					try {
-						date = LocalDate.parse(input, formatter);
+						LocalDate date = LocalDate.parse(input, formatter);
 						
 						if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now())) {
 							System.out.println("\nError: The entered date is already expired, "
 									+ "please try again.\n");
 						} else {
+							ingredient.setExpirationDate(date);
 							break;
 						}
 					} catch (DateTimeParseException e) {
 						System.out.println("\nError: Date input is invalid. Please try again.\n");
 					}
 				} else {
-					date = null;
 					break;
 				}
 			}
 			
 			newPage();
-			ingredient.setExpirationDate(date);
-			
 			while (true) {
 				System.out.println("Is the given information entered correctly?\n"
 						+ "\"" + ingredient.getName() + "\"" + ", " + "\"" + ingredient.getExpirationDate() + "\""
 						+ "\n1. Yes"
 						+ "\n2. No"
 						+ "\nEnter option here: ");
-				
 				input = scanner.nextLine();
 				
 				if (input.equals("1")) {
