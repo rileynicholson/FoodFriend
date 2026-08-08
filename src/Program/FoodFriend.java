@@ -147,13 +147,13 @@ public class FoodFriend {
 						
 						newPage();
 						if (input.equals("1")) { // Breakfast
-							Spoonacular.getRecipes(ingredients, "Breakfast", scanner);
+							Spoonacular.getRecipes(ingredients, "breakfast", scanner);
 							break;
 						} else if (input.equals("2")) { // Lunch
-							Spoonacular.getRecipes(ingredients, "Lunch", scanner);
+							Spoonacular.getRecipes(ingredients, "main%20course", scanner);
 							break;
 						} else if (input.equals("3")) { // Dinner
-							Spoonacular.getRecipes(ingredients, "Dinner", scanner);
+							Spoonacular.getRecipes(ingredients, "main%20course", scanner);
 							break;
 						} else {
 							System.out.println("Error: Input is not recognized. Please try again.\n");
@@ -163,11 +163,11 @@ public class FoodFriend {
 					break;
 					
 				case "2": // Dessert
-					Spoonacular.getRecipes(ingredients, "Dessert", scanner);
+					Spoonacular.getRecipes(ingredients, "dessert", scanner);
 					break;
 					
 				case "3": // Snack
-					Spoonacular.getRecipes(ingredients, "Snack", scanner);
+					Spoonacular.getRecipes(ingredients, "snack", scanner);
 					break;
 					
 				case "4": // Exit

@@ -35,28 +35,6 @@ public class Spoonacular {
 		HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 		String query = "";
 		
-		switch (dish) {
-		case "Breakfast":
-			dish = "breakfast";
-			break;
-			
-		case "Lunch":
-			dish = "main%20course";
-			break;
-			
-		case "Dinner":
-			dish = "main%20course";
-			break;
-			
-		case "Dessert":
-			dish = "dessert";
-			break;
-			
-		case "Snack":
-			dish = "snack";
-			break;
-		}
-		
 		for (int i = 0; i < ingredients.size(); i++) {
 			query += ingredients.get(i).getName();
 			
