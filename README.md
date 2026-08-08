@@ -45,7 +45,7 @@ java -cp bin Program.Main
 ```
 
 ## Before Running
-- Make sure you add your API Key into the project. Navigate to `src/Program/Spoonacular.java` and follow the instructions in lines 18-20.
+- Make sure you add your API Key into the project. Navigate to `src/Program/Spoonacular.java` and follow the instructions in lines 19-21.
 
 # Latest Updates to FoodFriend!
 - Added a working menu.
