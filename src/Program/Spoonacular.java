@@ -58,7 +58,9 @@ public class Spoonacular {
 				try (BufferedWriter writer = new BufferedWriter(new FileWriter("recipes.json", false))) {
 					writer.write(formatted);
 				} catch (IOException e) {
-					e.printStackTrace();
+					FoodFriend.newPage();
+					System.err.println("Error: Recipes could not be transfered to JSON file.");
+					return;
 				}
 				
 				storeRecipes(scanner);
